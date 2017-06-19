@@ -23,6 +23,7 @@ namespace Tasky
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new ViewModel.MainWIndowView();
         }
     }
 }
