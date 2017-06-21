@@ -11,8 +11,7 @@ namespace Tasky
         public string BtnRow { get; set; }
         public string MainWindowHeight { get; set; }
         public string MainWindowWidth { get; set; }
-        
-        private bool _canExecute;
+
         public ICommand ResizeWindowCommand { get; set; }
 
         public MainWindowView()
@@ -21,25 +20,13 @@ namespace Tasky
             TestLabel = "Hello";
             BtnCol = "0";
             BtnRow = "1";
-            _canExecute = true;
             MainWindowHeight = "600";
             MainWindowWidth = "400";
 
             this.ResizeWindowCommand = new RelayCommand(ResizeWindow);
 
         }
-
-        ///// <summary>
-        ///// ICommand for Search().
-        ///// </summary>
-        //public ICommand Cmd_ResizeWindow
-        //{
-        //    get
-        //    {
-        //        return _cmdResizeWindow ?? (_cmdResizeWindow = new CommandHandler(() => ResizeWindow(), _canExecute));
-        //    }
-        //}
-
+        
         /// <summary>
         /// Sets the property Number_GB to the next entry of the collection Anzahl.
         /// </summary>
@@ -50,32 +37,6 @@ namespace Tasky
 
             MainWindowHeight = $"{height}";
             MainWindowWidth = $"{width}";
-        }
-
-        /// <summary>
-        /// Command Handler for buttons of GDB.
-        /// </summary>
-        public class CommandHandler : ICommand
-        {
-            private Action _action;
-            private bool _canExecute;
-            public CommandHandler(Action action, bool canExecute)
-            {
-                _action = action;
-                _canExecute = canExecute;
-            }
-
-            public bool CanExecute(object parameter)
-            {
-                return _canExecute;
-            }
-
-            public event EventHandler CanExecuteChanged;
-
-            public void Execute(object parameter)
-            {
-                _action();
-            }
         }
     }
 }
