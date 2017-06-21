@@ -15,7 +15,15 @@ namespace Tasky
         public MainWindow()
         {
             InitializeComponent();
+            
             this.DataContext = new MainWindowView();
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.WindowStartupLocation = WindowStartupLocation.Manual;
+            this.Left = System.Windows.SystemParameters.WorkArea.Width - this.Width;
+            this.Top = System.Windows.SystemParameters.WorkArea.Height - this.Height;
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Tasky
@@ -11,32 +12,48 @@ namespace Tasky
         public string BtnRow { get; set; }
         public string MainWindowHeight { get; set; }
         public string MainWindowWidth { get; set; }
+        public string TestName { get; set; }
+        public ObservableCollection<string> TaskList { get; set; }
+
+        static double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+        static double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
 
         public ICommand ResizeWindowCommand { get; set; }
+        public ICommand TaskPlusCommand { get; set; }
 
         public MainWindowView()
         {
             MainWindowTitle = "Hello World";
             TestLabel = "Hello";
             BtnCol = "0";
-            BtnRow = "1";
-            MainWindowHeight = "600";
-            MainWindowWidth = "400";
+            BtnRow = "2";
+            MainWindowHeight = "130";
+            MainWindowWidth = "455";
 
-            this.ResizeWindowCommand = new RelayCommand(ResizeWindow);
+            TaskList = new ObservableCollection<string>();
+            TestName = "Task 1";
+
+            this.ResizeWindowCommand = new RelayCommand(ResizeWindowPlus);
+            this.TaskPlusCommand = new RelayCommand(TaskPlus);
 
         }
         
         /// <summary>
-        /// Sets the property Number_GB to the next entry of the collection Anzahl.
+        /// Resizes the window depending on the screen resolution.
         /// </summary>
-        public void ResizeWindow()
+        public void ResizeWindowPlus()
         {
-            int height = int.Parse(MainWindowHeight) + 100;
-            int width = int.Parse(MainWindowWidth) + 50;
-
+            int height = int.Parse(MainWindowHeight) + 50;
             MainWindowHeight = $"{height}";
-            MainWindowWidth = $"{width}";
+        }
+
+        /// <summary>
+        /// Adds a task to the list.
+        /// </summary>
+        public void TaskPlus()
+        {
+            TaskList.Add(TestName);
+            ResizeWindowPlus();
         }
     }
 }
