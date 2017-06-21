@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Windows.Interop;
+using System.Runtime.InteropServices;
 
 namespace Tasky
 {
@@ -20,10 +10,41 @@ namespace Tasky
     /// </summary>
     public partial class MainWindow : Window
     {
+        public double _aspectRatio = 1.6;
+
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new ViewModel.MainWIndowView();
+            this.DataContext = new MainWindowView();
         }
+
+#region Resize Window
+        //protected override void OnSourceInitialized(EventArgs e)
+        //{
+        //    base.OnSourceInitialized(e);
+        //    HwndSource source = HwndSource.FromVisual(this) as HwndSource;
+        //    if (source != null)
+        //    {
+        //        source.AddHook(new HwndSourceHook(WinProc));
+        //    }
+        //}
+
+        //public const Int32 WM_EXITSIZEMOVE = 0x0232;
+        //private IntPtr WinProc(IntPtr hwnd, Int32 msg, IntPtr wParam, IntPtr lParam, ref Boolean handled)
+        //{
+        //    IntPtr result = IntPtr.Zero;
+        //    switch (msg)
+        //    {
+        //        case WM_EXITSIZEMOVE:
+        //            {
+        //                this.Height = this.Width * _aspectRatio;
+        //                break;
+        //            }
+        //    }
+
+        //    return result;
+        //}
+#endregion
+
     }
 }
