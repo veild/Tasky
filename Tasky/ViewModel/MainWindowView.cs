@@ -135,6 +135,9 @@ namespace Tasky
             txtÍnput.ShowDialog();
 
             // Add the task to the list.
+            if (string.IsNullOrEmpty(txtÍnput.TaskName))
+                return;
+
             TaskList.Add(new Task(txtÍnput.TaskName));
             ResizeWindowPlus();
         }

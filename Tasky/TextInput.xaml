@@ -5,13 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Tasky"
         mc:Ignorable="d"
-        Title="TextInput" Height="100" Width="300"
-        Left="{Binding WindowLeft}" Top="{Binding WindowTop}"
+        Title="TextInput" 
+        MinWidth = "{Binding TextInputWindowWidth, Mode=TwoWay}"
+        MinHeight = "{Binding TextInputWindowHeight, Mode=TwoWay}"
+        Left="{Binding WindowLeft, Mode=TwoWay}" Top="{Binding WindowTop, Mode=TwoWay}"
+        Height="120"
+        Width="300"
+        BorderThickness="0" 
+        WindowStartupLocation="Manual"
+        ResizeMode="NoResize"
         Loaded="Window_Loaded">
-    <Grid>
-        <StackPanel>
-        <TextBox Margin="5" Text="{Binding TaskName}" Name="TextBoxTaskName" />
-        <Button Margin="5" Click="Button_Click">Bestätigen</Button>
-        </StackPanel>
-    </Grid>
+    <Viewbox VerticalAlignment="Top" HorizontalAlignment="Center">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="45" />
+                <RowDefinition Height="*" MinHeight="45" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="300"/>
+            </Grid.ColumnDefinitions>
+        <TextBox Grid.Row="0" Margin="5" FontSize="25" Text="{Binding TaskName}" Name="TextBoxTaskName" />
+        <Button Grid.Row="1" Margin="5" Height="40"  Click="Button_Click" FontSize="25" VerticalContentAlignment="top">Bestätigen</Button>
+        </Grid>
+    </Viewbox>
 </Window>
