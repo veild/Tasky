@@ -1,50 +1,128 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Windows.Input;
 
 namespace Tasky
 {
     class MainWindowView : BaseViewModel
     {
+        /// <summary>
+        /// Title of the MainWindow.
+        /// </summary>
         public string MainWindowTitle { get; set; }
-        public string TestLabel { get; set; }
-        public string BtnCol { get; set; }
-        public string BtnRow { get; set; }
+
+        /// <summary>
+        /// Height of the MainWindow.
+        /// </summary>
         public string MainWindowHeight { get; set; }
+
+        /// <summary>
+        /// Width of the MainWindow.
+        /// </summary>
         public string MainWindowWidth { get; set; }
-        public string TestName { get; set; }
-        public ObservableCollection<string> TaskList { get; set; }
 
-        static double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
-        static double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+        /// <summary>
+        /// Horizontal position of the MainWindow.
+        /// </summary>
+        public string MainWindowLeft { get; set; }
 
+        /// <summary>
+        /// Vertical position of the MainWindow.
+        /// </summary>
+        public string MainWindowTop { get; set; }
+
+        /// <summary>
+        /// Collection of tasks.
+        /// </summary>
+        public ObservableCollection<Task> TaskList { get; set; }
+
+        /// <summary>
+        /// Task class for the task list.
+        /// </summary>
+        public class Task
+        {
+            public string Name { get; set; }
+
+            public Task(string name)
+            {
+                Name = name;
+            }
+        }
+        
+        /// <summary>
+        /// Command for ResizeWindow().
+        /// </summary>
         public ICommand ResizeWindowCommand { get; set; }
+
+        /// <summary>
+        /// Command for TaskPlus().
+        /// </summary>
         public ICommand TaskPlusCommand { get; set; }
 
+        /// <summary>
+        /// The added height when a task has been added.
+        /// </summary>
+        private int mDeltaHeight = 50;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public MainWindowView()
         {
+            // Init properties.
             MainWindowTitle = "Hello World";
-            TestLabel = "Hello";
-            BtnCol = "0";
-            BtnRow = "2";
             MainWindowHeight = "130";
             MainWindowWidth = "455";
+            TaskList = new ObservableCollection<Task>();
 
-            TaskList = new ObservableCollection<string>();
-            TestName = "Task 1";
-
+            // Commands.
             this.ResizeWindowCommand = new RelayCommand(ResizeWindowPlus);
             this.TaskPlusCommand = new RelayCommand(TaskPlus);
 
+            ResizeWindow();
         }
-        
+
+        /// <summary>
+        /// Resizes the window depending on the screen resolution.
+        /// </summary>
+        public void ResizeWindow()
+        {
+            double screenWidth = System.Windows.SystemParameters.PrimaryScreenWidth;
+            double screenHeight = System.Windows.SystemParameters.PrimaryScreenHeight;
+            double screenX = 455;
+            double screenY = 130;
+
+            // TODO: more resolutions or responsive.
+            if (screenWidth <= 1920)
+            {
+                screenX = 455;
+                screenY = 130;
+                
+            }
+            else if (screenWidth <= 3840)
+            {
+                screenX = 910.0;
+                screenY = 260.0;
+                mDeltaHeight = 80;
+            }
+            
+            // TODO: test this
+            double top = screenHeight - screenY - 50;
+
+            MainWindowHeight = $"{screenY}";
+            MainWindowWidth = $"{screenX}";
+            MainWindowTop = $"{top}";
+        }
+
         /// <summary>
         /// Resizes the window depending on the screen resolution.
         /// </summary>
         public void ResizeWindowPlus()
         {
-            int height = int.Parse(MainWindowHeight) + 50;
+            int height = int.Parse(MainWindowHeight) + mDeltaHeight;
             MainWindowHeight = $"{height}";
+
+            int top = int.Parse(MainWindowTop) - mDeltaHeight;
+            MainWindowTop = $"{top}";
         }
 
         /// <summary>
@@ -52,7 +130,12 @@ namespace Tasky
         /// </summary>
         public void TaskPlus()
         {
-            TaskList.Add(TestName);
+            // Get TaskName of TextInput.
+            TextInput txtÍnput = new TextInput();
+            txtÍnput.ShowDialog();
+
+            // Add the task to the list.
+            TaskList.Add(new Task(txtÍnput.TaskName));
             ResizeWindowPlus();
         }
     }

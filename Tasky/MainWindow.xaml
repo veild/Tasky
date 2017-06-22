@@ -10,6 +10,7 @@
             Title="{Binding MainWindowTitle}"
             MinWidth = "{Binding MainWindowWidth, Mode=TwoWay}"
             MinHeight = "{Binding MainWindowHeight, Mode=TwoWay}"
+            Left="{Binding MainWindowLeft, Mode=TwoWay}" Top="{Binding MainWindowTop, Mode=TwoWay}"
             Height="130"
             Width="455"
             BorderThickness="0" 
@@ -19,9 +20,10 @@
     <Window.DataContext>
         <local:MainWindowView/>
     </Window.DataContext>
-    <Canvas>
-    <Grid Background="#7F90EE90" Canvas.Top="0">
-        <Grid.RowDefinitions>
+    
+    <Viewbox VerticalAlignment="Top" HorizontalAlignment="Left">
+        <Grid HorizontalAlignment="Left">
+        <!--<Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
             <RowDefinition Height="50" />
@@ -31,12 +33,23 @@
             <ColumnDefinition Width="200" />
             <ColumnDefinition Width="150" />
             <ColumnDefinition Width="50" />
-        </Grid.ColumnDefinitions>
-        
-        <Label Content="Tasky" />
+        </Grid.ColumnDefinitions>-->
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" MinHeight="50" />
+                <RowDefinition Height="*"  />
+                <RowDefinition Height="*" MinHeight="50" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="50"/>
+                <ColumnDefinition Width="4*" MinWidth="200"/>
+                <ColumnDefinition Width="3*" MinWidth="150"/>
+                <ColumnDefinition Width="*" MinWidth="50" />
+            </Grid.ColumnDefinitions>
+            <Label  Content="Tasky" Grid.Column="0"
+                    Grid.Row="0" />
 
             <StackPanel Grid.Row="1" Grid.ColumnSpan="4" HorizontalAlignment="Left">
-                <ItemsControl ItemsSource="{Binding TaskList}">
+                <ItemsControl ItemsSource="{Binding TaskList}" Tag="{Binding}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -48,7 +61,7 @@
                                         <ColumnDefinition Width="50" />
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
-                                        <RowDefinition Height="50"/>
+                                        <RowDefinition Height="*"/>
                                     </Grid.RowDefinitions>
                                     <Button 
                                         Height="30"
@@ -57,10 +70,10 @@
                                         Grid.Column="0"
                                         Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.TaskPlusCommand}">TEST</Button>
                                     <TextBlock Grid.Column="1" 
+                                               Grid.ColumnSpan="3"
                                                VerticalAlignment="Center"
                                                FontSize="25"
-                                               Text="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.TestName}"
-                                               />
+                                               Text="{Binding Name}" />
                                     <Button 
                                         Height="30"
                                         Width="30"
@@ -80,29 +93,8 @@
                     Width="30"
                     Margin="5"
                     Grid.Column="0"
-                    Grid.Row="{Binding BtnRow}"
+                    Grid.Row="2"
                     Command="{Binding TaskPlusCommand}"/>
-            <!--<TextBlock 
-            Grid.Column="1" 
-            Grid.Row="1" 
-            Text="Task 1" 
-            VerticalAlignment="Center" 
-            Margin="5" FontSize="25" />
-        <Button 
-            MinHeight="20"
-            MinWidth="20"
-            Margin="5"
-            Grid.Column="0" 
-            Grid.Row="1"
-            Command="{Binding}"/>
-        <Button 
-            MinHeight="20"
-            MinWidth="20"
-            Margin="5"
-            Grid.Column="3" 
-            Grid.Row="1"
-            Command="{Binding}"/>-->
-        
         </Grid>
-    </Canvas>
+    </Viewbox>
 </Window>
