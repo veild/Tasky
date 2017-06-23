@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Input;
 
 namespace Tasky
@@ -46,6 +47,12 @@ namespace Tasky
             {
                 Name = name;
             }
+
+            public string GetTaskName()
+            {
+                string name = Name;
+                return name;
+            }
         }
         
         /// <summary>
@@ -57,6 +64,11 @@ namespace Tasky
         /// Command for TaskPlus().
         /// </summary>
         public ICommand TaskPlusCommand { get; set; }
+
+        /// <summary>
+        /// Command for GetName().
+        /// </summary>
+        public ICommand GetNameCommand { get; set; }
 
         /// <summary>
         /// The added height when a task has been added.
@@ -77,6 +89,8 @@ namespace Tasky
             // Commands.
             this.ResizeWindowCommand = new RelayCommand(ResizeWindowPlus);
             this.TaskPlusCommand = new RelayCommand(TaskPlus);
+            //this.GetNameCommand = new RelayCommand(GetName);
+            this.GetNameCommand = new RelayCommand(param => this.GetName(param));
 
             ResizeWindow();
         }
@@ -140,6 +154,12 @@ namespace Tasky
 
             TaskList.Add(new Task(txtÍnput.TaskName));
             ResizeWindowPlus();
+        }
+
+        public void GetName(object parameter)
+        {
+            Task task = (Task)parameter;
+            MessageBox.Show(task.Name);
         }
     }
 }

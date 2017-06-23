@@ -12,6 +12,7 @@ namespace Tasky
         /// The action to run.
         /// </summary>
         private Action mAction;
+        private Action<object> mActionObj;
 
         /// <summary>
         /// The event fired when the <see cref="CanExecute(object)"/> value has changed.
@@ -25,7 +26,12 @@ namespace Tasky
         {
             mAction = action;
         }
-        
+
+        public RelayCommand(Action<object> action)
+        {
+            mActionObj = action;
+        }
+
         /// <summary>
         /// A relay can always execute.
         /// </summary>
@@ -38,7 +44,16 @@ namespace Tasky
 
         public void Execute(object parameter)
         {
-            mAction();
+            try
+            {
+                mAction();
+            }
+            catch { }
+            try
+            {
+                mActionObj(parameter);
+            }
+            catch { }
         }
     }
 }

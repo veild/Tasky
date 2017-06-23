@@ -16,24 +16,67 @@
             BorderThickness="0" 
             WindowStartupLocation="Manual"
             ResizeMode="NoResize"
-            Loaded="Window_Loaded">
+            Loaded="Window_Loaded"
+        FontFamily="Roboto" FontWeight="Bold">
     <Window.DataContext>
         <local:MainWindowView/>
     </Window.DataContext>
+    <Window.Resources>
+        <Style x:Key="RoundCorner" TargetType="{x:Type Button}">
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Padding" Value="1"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid x:Name="grid">
+                            <Border x:Name="border" CornerRadius="20" BorderBrush="#7F000000" BorderThickness="1">
+                                <Border.Background>
+                                    <SolidColorBrush Color="#90CAF9"></SolidColorBrush>
+                                </Border.Background>
+                                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center" TextElement.FontWeight="Bold"></ContentPresenter>
+                            </Border>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" TargetName="border">
+                                    <Setter.Value>
+                                        <RadialGradientBrush GradientOrigin="0.496,1.052">
+                                            <RadialGradientBrush.RelativeTransform>
+                                                <TransformGroup>
+                                                    <ScaleTransform CenterX="0.5" CenterY="0.5" ScaleX="1.5" ScaleY="1.5"/>
+                                                    <TranslateTransform X="0.02" Y="0.3"/>
+                                                </TransformGroup>
+                                            </RadialGradientBrush.RelativeTransform>
+                                            <GradientStop Color="#90CAF9" Offset="1"/>
+                                            <GradientStop Color="#4C303030" Offset="0.1"/>
+                                        </RadialGradientBrush>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Button.Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black" ShadowDepth="4" BlurRadius="10" Opacity="0.8" Direction="270" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="True">
+                                <Setter Property="Button.Effect">
+                                    <Setter.Value>
+                                        <DropShadowEffect Color="Black" ShadowDepth="4" BlurRadius="10" Opacity="0.4" Direction="270" />
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
     
     <Viewbox VerticalAlignment="Top" HorizontalAlignment="Left">
         <Grid HorizontalAlignment="Left">
-        <!--<Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="50" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="50" />
-            <ColumnDefinition Width="200" />
-            <ColumnDefinition Width="150" />
-            <ColumnDefinition Width="50" />
-        </Grid.ColumnDefinitions>-->
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" MinHeight="50" />
                 <RowDefinition Height="*"  />
@@ -45,11 +88,12 @@
                 <ColumnDefinition Width="3*" MinWidth="150"/>
                 <ColumnDefinition Width="*" MinWidth="50" />
             </Grid.ColumnDefinitions>
+            
             <Label  Content="Tasky" Grid.Column="0"
                     Grid.Row="0" />
 
             <StackPanel Grid.Row="1" Grid.ColumnSpan="4" HorizontalAlignment="Left">
-                <ItemsControl ItemsSource="{Binding TaskList}" Tag="{Binding}">
+                <ItemsControl ItemsSource="{Binding TaskList}">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
@@ -68,7 +112,8 @@
                                         Width="30"
                                         Margin="5"
                                         Grid.Column="0"
-                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.TaskPlusCommand}">TEST</Button>
+                                        Style="{DynamicResource RoundCorner}"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.TaskPlusCommand}" />
                                     <TextBlock Grid.Column="1" 
                                                Grid.ColumnSpan="3"
                                                VerticalAlignment="Center"
@@ -79,7 +124,9 @@
                                         Width="30"
                                         Margin="5"
                                         Grid.Column="3"
-                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.TaskPlusCommand}">START/STOP</Button>
+                                        Style="{DynamicResource RoundCorner}"
+                                        Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.GetNameCommand}"
+                                        CommandParameter="{Binding}"/>
                                 </Grid>
                             </StackPanel>
                         </DataTemplate>
@@ -94,6 +141,9 @@
                     Margin="5"
                     Grid.Column="0"
                     Grid.Row="2"
+                    Content="+"
+                    
+                    Style="{DynamicResource RoundCorner}"
                     Command="{Binding TaskPlusCommand}"/>
         </Grid>
     </Viewbox>
