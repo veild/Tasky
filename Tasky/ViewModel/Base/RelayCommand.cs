@@ -27,6 +27,10 @@ namespace Tasky
             mAction = action;
         }
 
+        /// <summary>
+        /// Constructor with parameter for CommandParameter.
+        /// </summary>
+        /// <param name="action"></param>
         public RelayCommand(Action<object> action)
         {
             mActionObj = action;
@@ -42,18 +46,14 @@ namespace Tasky
             return true;
         }
 
+        /// <summary>
+        /// Executes the action.
+        /// </summary>
+        /// <param name="parameter"></param>
         public void Execute(object parameter)
         {
-            try
-            {
-                mAction();
-            }
-            catch { }
-            try
-            {
-                mActionObj(parameter);
-            }
-            catch { }
+            mAction?.Invoke();
+            mActionObj?.Invoke(parameter);
         }
     }
 }

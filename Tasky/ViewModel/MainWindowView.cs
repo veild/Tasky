@@ -1,6 +1,9 @@
-﻿using System.Collections.ObjectModel;
+﻿using System;
+using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Input;
+using System.Threading;
 
 namespace Tasky
 {
@@ -32,28 +35,14 @@ namespace Tasky
         public string MainWindowTop { get; set; }
 
         /// <summary>
+        /// Indicates whether the task is running or not.
+        /// </summary>
+        public string PlayPauseContent { get; set; }
+
+        /// <summary>
         /// Collection of tasks.
         /// </summary>
         public ObservableCollection<Task> TaskList { get; set; }
-
-        /// <summary>
-        /// Task class for the task list.
-        /// </summary>
-        public class Task
-        {
-            public string Name { get; set; }
-
-            public Task(string name)
-            {
-                Name = name;
-            }
-
-            public string GetTaskName()
-            {
-                string name = Name;
-                return name;
-            }
-        }
         
         /// <summary>
         /// Command for ResizeWindow().
@@ -66,9 +55,14 @@ namespace Tasky
         public ICommand TaskPlusCommand { get; set; }
 
         /// <summary>
-        /// Command for GetName().
+        /// Command for TaskMinus().
         /// </summary>
-        public ICommand GetNameCommand { get; set; }
+        public ICommand TaskMinusCommand { get; set; }
+
+        /// <summary>
+        /// Command for PlayPause().
+        /// </summary>
+        public ICommand PlayPauseCommand { get; set; }
 
         /// <summary>
         /// The added height when a task has been added.
@@ -84,15 +78,21 @@ namespace Tasky
             MainWindowTitle = "Hello World";
             MainWindowHeight = "130";
             MainWindowWidth = "455";
+            PlayPauseContent = "Run";
             TaskList = new ObservableCollection<Task>();
 
             // Commands.
             this.ResizeWindowCommand = new RelayCommand(ResizeWindowPlus);
             this.TaskPlusCommand = new RelayCommand(TaskPlus);
-            //this.GetNameCommand = new RelayCommand(GetName);
-            this.GetNameCommand = new RelayCommand(param => this.GetName(param));
+            this.TaskMinusCommand = new RelayCommand(param => this.TaskMinus(param));
+            this.PlayPauseCommand = new RelayCommand(param => this.PlayPause(param));
 
             ResizeWindow();
+
+            Thread thread = new Thread(new ThreadStart(RunTimes));
+            thread.IsBackground = true;
+            thread.Name = "Data Polling Thread";
+            thread.Start();
         }
 
         /// <summary>
@@ -156,10 +156,75 @@ namespace Tasky
             ResizeWindowPlus();
         }
 
-        public void GetName(object parameter)
+        /// <summary>
+        /// Removes the selected task from the list.
+        /// </summary>
+        /// <param name="parameter"></param>
+        public void TaskMinus(object parameter)
         {
             Task task = (Task)parameter;
-            MessageBox.Show(task.Name);
+            int i = TaskList.IndexOf(task);
+            if (TaskList[i].IsRunning) return;
+            TaskList.RemoveAt(i);
+        }
+
+        public void PlayPause(object parameter)
+        {
+            Task task = (Task)parameter;
+            int i = TaskList.IndexOf(task);
+            if (TaskList[i].IsRunning)
+            {
+                TaskList[i].IsRunning = false;
+                PlayPauseContent = "Play";
+            }
+            else
+            {
+                TaskList[i].IsRunning = true;
+                PlayPauseContent = "||";
+            }
+        }
+
+        /// <summary>
+        /// Looks which tasks are running and updates their times.
+        /// </summary>
+        public void RunTimes()
+        {
+            while (true)
+            {
+                Thread.Sleep(1000);
+                foreach (var task in TaskList)
+                {
+                    if (task.IsRunning)
+                    {
+                        DateTime dateTime = DateTime.ParseExact(task.Time, "HH:mm:ss", CultureInfo.InvariantCulture);
+                        DateTime newTime = dateTime.Add(new TimeSpan(0, 0, 1));
+                        task.Time = newTime.ToLongTimeString();
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Task class for the task list.
+        /// </summary>
+        public class Task : BaseViewModel
+        {
+            public string Name { get; set; }
+            public string Time { get; set; }
+            public bool IsRunning { get; set; }
+
+            public Task(string name)
+            {
+                Name = name;
+                Time = "00:00:00";
+                IsRunning = false;
+            }
+
+            public string GetTaskName()
+            {
+                string name = Name;
+                return name;
+            }
         }
     }
 }
