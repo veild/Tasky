@@ -10,11 +10,14 @@
             Title="{Binding MainWindowTitle}"
             MinWidth = "{Binding MainWindowWidth, Mode=TwoWay}"
             MinHeight = "{Binding MainWindowHeight, Mode=TwoWay}"
+            MaxWidth = "{Binding MainWindowWidth, Mode=TwoWay}"
+            MaxHeight = "{Binding MainWindowHeight, Mode=TwoWay}"
             Left="{Binding MainWindowLeft, Mode=TwoWay}" Top="{Binding MainWindowTop, Mode=TwoWay}"
             Height="130"
             Width="455"
+            SizeToContent="WidthAndHeight"
             BorderThickness="0" 
-            WindowStartupLocation="Manual"
+            WindowStartupLocation="CenterOwner"
             ResizeMode="NoResize"
             Loaded="Window_Loaded"
         FontFamily="Roboto" FontWeight="Bold">
@@ -88,9 +91,9 @@
                 <ColumnDefinition Width="3*" MinWidth="150"/>
                 <ColumnDefinition Width="*" MinWidth="50" />
             </Grid.ColumnDefinitions>
-            
-            <Label  Content="Tasky" Grid.Column="0"
-                    Grid.Row="0" />
+
+            <Label Grid.Column="1" Content="Task" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
+            <Label Grid.Column="2" Content="Time" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontSize="20"/>
 
             <StackPanel Grid.Row="1" Grid.ColumnSpan="4" HorizontalAlignment="Left">
                 <ItemsControl ItemsSource="{Binding TaskList, UpdateSourceTrigger=PropertyChanged}">
@@ -129,7 +132,7 @@
                                         Width="30"
                                         Margin="5"
                                         Grid.Column="3"
-                                        Content="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.PlayPauseContent}"
+                                        Content="{Binding PlayPauseContent}"
                                         Style="{DynamicResource RoundCorner}"
                                         Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.PlayPauseCommand}"
                                         CommandParameter="{Binding}"/>

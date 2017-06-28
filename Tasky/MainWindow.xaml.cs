@@ -38,8 +38,8 @@ namespace Tasky
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             this.WindowStartupLocation = WindowStartupLocation.Manual;
-            this.Left = System.Windows.SystemParameters.WorkArea.Width - this.Width;
-            this.Top = System.Windows.SystemParameters.WorkArea.Height - this.Height * 2;
+            this.Left = System.Windows.SystemParameters.WorkArea.Width - MainWindowView.Width;
+            this.Top = System.Windows.SystemParameters.WorkArea.Height - MainWindowView.Height;
         }
     }
 }

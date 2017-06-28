@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="*" MinWidth="300"/>
             </Grid.ColumnDefinitions>
         <TextBox Grid.Row="0" Margin="5" FontSize="25" Text="{Binding TaskName}" Name="TextBoxTaskName" />
-        <Button Grid.Row="1" Margin="5" Height="40"  Click="Button_Click" FontSize="25" VerticalContentAlignment="top">Bestätigen</Button>
+        <Button Grid.Row="1" Margin="5" Height="40"  Click="Button_Click" FontSize="25" VerticalContentAlignment="top">Confirm</Button>
         </Grid>
     </Viewbox>
 </Window>

@@ -14,10 +14,12 @@ namespace Tasky
         private Action mAction;
         private Action<object> mActionObj;
 
+#pragma warning disable 0067
         /// <summary>
         /// The event fired when the <see cref="CanExecute(object)"/> value has changed.
         /// </summary>
         public event EventHandler CanExecuteChanged;
+#pragma warning restore 0067
 
         /// <summary>
         /// Default constructor.

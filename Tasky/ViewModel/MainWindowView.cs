@@ -10,6 +10,16 @@ namespace Tasky
     class MainWindowView : BaseViewModel
     {
         /// <summary>
+        /// Height variable of the MainWindow.
+        /// </summary>
+        public static double Height;
+
+        /// <summary>
+        /// Width variable of the MainWindow.
+        /// </summary>
+        public static double Width;
+
+        /// <summary>
         /// Title of the MainWindow.
         /// </summary>
         public string MainWindowTitle { get; set; }
@@ -33,12 +43,7 @@ namespace Tasky
         /// Vertical position of the MainWindow.
         /// </summary>
         public string MainWindowTop { get; set; }
-
-        /// <summary>
-        /// Indicates whether the task is running or not.
-        /// </summary>
-        public string PlayPauseContent { get; set; }
-
+        
         /// <summary>
         /// Collection of tasks.
         /// </summary>
@@ -75,23 +80,27 @@ namespace Tasky
         public MainWindowView()
         {
             // Init properties.
-            MainWindowTitle = "Hello World";
+            MainWindowTitle = "Tasky";
             MainWindowHeight = "130";
             MainWindowWidth = "455";
-            PlayPauseContent = "Run";
             TaskList = new ObservableCollection<Task>();
-
+            
             // Commands.
-            this.ResizeWindowCommand = new RelayCommand(ResizeWindowPlus);
+            //this.ResizeWindowCommand = new RelayCommand(ResizeWindowPlusMinus);
             this.TaskPlusCommand = new RelayCommand(TaskPlus);
             this.TaskMinusCommand = new RelayCommand(param => this.TaskMinus(param));
             this.PlayPauseCommand = new RelayCommand(param => this.PlayPause(param));
 
             ResizeWindow();
 
-            Thread thread = new Thread(new ThreadStart(RunTimes));
-            thread.IsBackground = true;
-            thread.Name = "Data Polling Thread";
+            Height = double.Parse(MainWindowHeight);
+            Width = double.Parse(MainWindowWidth);
+
+            Thread thread = new Thread(new ThreadStart(RunTimes))
+            {
+                IsBackground = true,
+                Name = "Time running"
+            };
             thread.Start();
         }
 
@@ -119,8 +128,7 @@ namespace Tasky
                 mDeltaHeight = 80;
             }
             
-            // TODO: test this
-            double top = screenHeight - screenY - 50;
+            double top = screenHeight - screenY - 40;
 
             MainWindowHeight = $"{screenY}";
             MainWindowWidth = $"{screenX}";
@@ -128,14 +136,25 @@ namespace Tasky
         }
 
         /// <summary>
-        /// Resizes the window depending on the screen resolution.
+        /// Resizes the window if a task is added or deleted.
         /// </summary>
-        public void ResizeWindowPlus()
+        /// <param name="newTask"></param>
+        public void ResizeWindowPlusMinus(bool newTask)
         {
-            int height = int.Parse(MainWindowHeight) + mDeltaHeight;
-            MainWindowHeight = $"{height}";
+            int height = 0;
+            int top = 0;
+            if (newTask)
+            {
+                height = int.Parse(MainWindowHeight) + mDeltaHeight;
+                top = int.Parse(MainWindowTop) - mDeltaHeight;
+            }
+            else
+            {
+                height = int.Parse(MainWindowHeight) - mDeltaHeight;
+                top = int.Parse(MainWindowTop) + mDeltaHeight;
+            }
 
-            int top = int.Parse(MainWindowTop) - mDeltaHeight;
+            MainWindowHeight = $"{height}";
             MainWindowTop = $"{top}";
         }
 
@@ -153,7 +172,7 @@ namespace Tasky
                 return;
 
             TaskList.Add(new Task(txtÍnput.TaskName));
-            ResizeWindowPlus();
+            ResizeWindowPlusMinus(true);
         }
 
         /// <summary>
@@ -166,6 +185,7 @@ namespace Tasky
             int i = TaskList.IndexOf(task);
             if (TaskList[i].IsRunning) return;
             TaskList.RemoveAt(i);
+            ResizeWindowPlusMinus(false);
         }
 
         public void PlayPause(object parameter)
@@ -175,12 +195,12 @@ namespace Tasky
             if (TaskList[i].IsRunning)
             {
                 TaskList[i].IsRunning = false;
-                PlayPauseContent = "Play";
+                TaskList[i].PlayPauseContent = "Run";
             }
             else
             {
                 TaskList[i].IsRunning = true;
-                PlayPauseContent = "||";
+                TaskList[i].PlayPauseContent = "||";
             }
         }
 
@@ -209,21 +229,36 @@ namespace Tasky
         /// </summary>
         public class Task : BaseViewModel
         {
+            /// <summary>
+            /// Name of the task.
+            /// </summary>
             public string Name { get; set; }
+
+            /// <summary>
+            /// The current/elapsed time of the task.
+            /// </summary>
             public string Time { get; set; }
+
+            /// <summary>
+            /// Content of the Play/Pause button.
+            /// </summary>
+            public string PlayPauseContent { get; set; }
+
+            /// <summary>
+            /// Indicates whether the task is running or not.
+            /// </summary>
             public bool IsRunning { get; set; }
 
+            /// <summary>
+            /// Default constructor.
+            /// </summary>
+            /// <param name="name"></param>
             public Task(string name)
             {
                 Name = name;
                 Time = "00:00:00";
+                PlayPauseContent = "Run";
                 IsRunning = false;
-            }
-
-            public string GetTaskName()
-            {
-                string name = Name;
-                return name;
             }
         }
     }
