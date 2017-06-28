@@ -188,6 +188,10 @@ namespace Tasky
             ResizeWindowPlusMinus(false);
         }
 
+        /// <summary>
+        /// Play and pause function of the the button.
+        /// </summary>
+        /// <param name="parameter"></param>
         public void PlayPause(object parameter)
         {
             Task task = (Task)parameter;
